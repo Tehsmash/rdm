@@ -1,4 +1,3 @@
-require 'gtk2'
 require 'etc'
 require 'shadow'
 require 'webkit'
@@ -14,10 +13,9 @@ def startXServer
 end
 
 def waitForXServer
-  cycles = 120
-  for i in 0..cycles
+  for i in 0..60
     begin
-      Gtk::init
+      require 'gtk2'
     rescue
       sleep(1)
     end
