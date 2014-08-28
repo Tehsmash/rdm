@@ -1,0 +1,36 @@
+#!/bin/sh
+#/etc/init.d/rdm
+### BEGIN INIT INFO
+# Provides:		rdm
+# Should-Start:		rdm
+# Required-Start: 	$local_fs $remote_fs x11-common
+# Required-Stop: 	$local_fs $remote_fs
+# Default-Start: 	2 3 4 5
+# Default-Stop: 	0 1 6
+# Short-Description: 	Ruby Display Manager
+# Description: 		Debian init script for the Ruby Display Manager
+### END INIT INFO
+#
+# Author: Sam Betts <sam@code-smash.net>
+#
+
+touch /var/lock/rdm
+
+case "$1" in
+  start)
+    echo "Starting RDM"
+    /usr/bin/ruby /root/rdm/test.rb & 
+    rdm=$!
+    echo $rdm > /var/lock/rdm
+    ;;
+  stop)
+    echo "Stopping RDM"
+    kill -9 `cat /var/lock/rdm`
+    ;;
+  *)
+    echo "Usage: /etc/init.d/rdm {start|stop}"
+    exit 1
+    ;;
+esac
+
+exit 0 
