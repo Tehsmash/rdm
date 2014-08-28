@@ -4,6 +4,26 @@ require 'shadow'
 require 'webkit'
 require 'erb'
 
+def startXServer
+  Process.fork do 
+    exec("/usr/bin/X")
+  end
+  if waitForXServer
+  else
+  end
+end
+
+def waitForXServer
+  cycles = 120
+  for i in 0..cycles
+    begin
+      Gtk::init
+    rescue
+      sleep(1)
+    end
+  end
+end
+
 def authenticate(username, password)
   pwnam = Etc.getpwnam(username) 
   Etc.endpwent()
@@ -66,6 +86,8 @@ module ErbData
 end
 
 @display = ":0.0"
+
+startXServer
 
 render = ERB.new(File.read("/home/sam/rdm/login.html.erb")).result(ErbData.instance_eval { binding })
 
