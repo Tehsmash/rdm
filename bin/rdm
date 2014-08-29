@@ -1,0 +1,16 @@
+#!/usr/bin/ruby
+
+require 'rdm'
+
+if ARGV[0] == "--test"
+  require 'gtk2'
+  require 'webkit'
+else
+  ENV['XAUTHORITY'] = RDM::XServer.createAuth 
+  ENV['DISPLAY'] = RDM::XServer.display
+  RDM::XServer.start
+end
+
+RDM::Panel.new
+
+RDM::Panel.run

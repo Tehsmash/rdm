@@ -6,12 +6,12 @@
   <div id="main"> 
     <div id="cell">
       <div id="content">
-        Username: <input id="username" type="text" name="username"><br>
-        Password: <input id="password" type="password" name="password"><br>
-        Pick a session:
+        <label>Username:</label><input id="username" type="text" name="username"><br>
+        <label>Password:</label><input id="password" type="password" name="password"><br>
+        <label>Pick a session:</label>
         <select id="sessions">
           <% sessions.each do |session| %>
-            <option value="<%= session %>"><%=session%></option>
+            <option value="<%= session %>"><%= session %></option>
           <% end %>
         </select>
 
@@ -24,8 +24,8 @@
   </div>
 
   <div id="powerControls">
-    <button id="power" onclick="shutdown()" value="power">Shutdown</button>
-    <button id="restart" onclick="restart()" value="restart">Restart</button> 
+    <button id="power" onclick="shutdown()">Shutdown</button>
+    <button id="rs" onclick="reboot()">Restart</button> 
   </div>
 
   <script>
