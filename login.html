@@ -1,0 +1,39 @@
+<html>
+  <link rel="stylesheet" type="text/css" href="login.css">
+<head>
+</head>
+<body>
+  <div id="main"> 
+    <div id="cell">
+      <div id="content">
+        Username: <input id="username" type="text" name="username"><br>
+        Password: <input id="password" type="password" name="password"><br>
+        Pick a session:
+        <select id="sessions">
+          <% sessions.each do |session| %>
+            <option value="<%= session %>"><%=session%></option>
+          <% end %>
+        </select>
+
+        <br/><br/>
+
+        <input type="button" onclick="doLogin()" value="Login">
+        
+      </div>
+    </div>
+  </div>
+
+  <div id="powerControls">
+    <button id="power" onclick="shutdown()" value="power">Shutdown</button>
+    <button id="restart" onclick="restart()" value="restart">Restart</button> 
+  </div>
+
+  <script>
+    function doLogin() {
+      username = document.getElementById("username").value
+      password = document.getElementById("password").value
+      login(username, password)
+    }
+  </script>
+</body>
+</html>
