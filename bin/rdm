@@ -1,15 +1,18 @@
 #!/usr/bin/ruby
 
-require 'rdm'
-
 if ARGV[0] == "--test"
   require 'gtk2'
   require 'webkit'
+elsif defined? ARGV[0]
+  puts "Usage rdm {--test}"
+  exit
 else
   ENV['XAUTHORITY'] = RDM::XServer.createAuth 
   ENV['DISPLAY'] = RDM::XServer.display
   RDM::XServer.start
 end
+
+require 'rdm'
 
 RDM::Panel.new
 
