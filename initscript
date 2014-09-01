@@ -19,7 +19,7 @@ touch /var/lock/rdm
 case "$1" in
   start)
     echo "Starting RDM"
-    /usr/bin/ruby /root/rdm/test.rb & 
+    /usr/local/bin/rdm & 
     rdm=$!
     echo $rdm > /var/lock/rdm
     ;;
