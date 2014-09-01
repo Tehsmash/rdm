@@ -2,6 +2,7 @@ Gem::Specification.new do |s|
   s.name        = 'rdm'
   s.version     = '0.1.0'
   s.date        = '2014-08-29'
+  s.add_runtime_dependency "gtk-webkit-ruby", ["= 0.0.8"]
   s.summary     = "Ruby Display Manager"
   s.description = "A Ruby, GTK and Webkit powered display manager for linux."
   s.authors     = ["Sam Betts"]
