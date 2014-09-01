@@ -9,14 +9,14 @@ module RDM::XServer
     system("mkdir -p #{xauthpath}")
     system("rm -f #{file}")
     system("touch #{file}")
-    mcookie = %x(dd if=/dev/random bs=16 count=1 2>/dev/null | hexdump -e \\"%08x\\")
-    system("xauth -q -f #{file} add #{@display} . #{mcookie}")
+    @mcookie = %x(dd if=/dev/random bs=16 count=1 2>/dev/null | hexdump -e \\"%08x\\")
+    system("xauth -q -f #{file} add #{@display} . #{@mcookie}")
     return file
   end
 
   def self.start
     Process.fork do 
-      exec("/usr/bin/X")
+      exec("/usr/bin/X vt07 -auth /var/lib/rdm/:0.Xauth")
     end
     if wait
     else
@@ -25,6 +25,10 @@ module RDM::XServer
 
   def self.display
     @display
+  end
+
+  def self.mcookie
+    @mcookie
   end
 
   def self.wait

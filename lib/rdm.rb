@@ -19,32 +19,44 @@ module RDM
   end
 
   def self.switchuser(pwnam)
-      Process.uid = pwnam.uid
-      Process.gid = pwnam.gid
       Process.initgroups(pwnam.name, pwnam.gid)
+      Process::GID.change_privilege(pwnam.gid)
+      Process::UID.change_privilege(pwnam.uid)
   end
 
   def self.login(username)
     pwnam = Etc.getpwnam(username) 
     Etc.endpwent()
 
-    xauth = pwnam.dir + "/.Xauthority"
+    xauthfile = pwnam.dir + "/.Xauthority"
+
+    xauthcmd = "xauth -q -f #{xauthfile} add #{RDM::XServer.display} . #{RDM::XServer.mcookie}"
 
     Process.fork do
       RDM.switchuser pwnam
 
-      env = {}
-      env['HOME'] = pwnam.dir
-      env['PWD'] = pwnam.dir
-      env['SHELL'] = pwnam.shell
-      env['USER'] = pwnam.name
-      env['LOGNAME'] = pwnam.name
-      env['PATH'] = RDM::Config.get("defaultpath")
-      env['DISPLAY'] = RDM::XServer.display
-      env['XAUTHORITY'] = xauth
+      ENV['TERM'] = "xterm"
+      ENV['HOME'] = pwnam.dir
+      ENV['PWD'] = pwnam.dir
+      ENV['SHELL'] = pwnam.shell
+      ENV['USER'] = pwnam.name
+      ENV['LOGNAME'] = pwnam.name
+      ENV['PATH'] = RDM::Config.get("defaultpath")
+      ENV['DISPLAY'] = RDM::XServer.display
+      ENV['XAUTHORITY'] = xauthfile
 
-      #cmd = "exec /bin/bash -login exec awesome"
-      exec(env, "/usr/bin/awesome")
+      Dir.chdir(pwnam.dir)
+
+      system("rm -f #{xauthfile}")
+      system("touch #{xauthfile}")
+      system(xauthcmd)
+
+      unless RDM::Panel.session == "default"
+        system("echo '[Desktop]\nSession=#{RDM::Panel.session}' > ~/.dmrc")
+      end
+
+      session = RDM::Config.sessionExec(RDM::Panel.session)
+      exec("/bin/bash", "-c", "exec /bin/bash -login /etc/X11/Xsession #{session}")
     end
 
     RDM::Panel.hide
@@ -54,6 +66,14 @@ module RDM
     RDM::Panel.clean
 
     RDM::Panel.show
+  end
+
+  def self.reboot
+    system("reboot")
+  end
+
+  def self.shutdown
+    system("shutdown -h now")
   end
 end
 

@@ -5,6 +5,10 @@ module RDM::Panel
     end
   end
 
+  def self.session
+    @webkit.main_frame.exec_js("session()")
+  end
+
   def self.renderERB(path)
     return ERB.new(File.read(path)).result(ErbData.instance_eval { binding })
   end
@@ -17,6 +21,8 @@ module RDM::Panel
 
       @webkit = WebKit::WebView.new
       @webkit.load_string(render, "text/html", "UTF-8", "file://#{RDM::Config.get("themepath")}/login.html.erb")
+
+      @webkit.settings.enable_default_context_menu = false
 
       @window = Gtk::Window.new
       @window.title = 'RDM'
@@ -37,10 +43,15 @@ module RDM::Panel
 
   def self.addJSHooks
     @webkit.main_frame.add_js_api('login') do |username, password|
-      if RDM.authenticate(username, password)
-        RDM.login(username)
-      else
-        #Error Messages
+      begin
+        if RDM.authenticate(username, password)
+          RDM.login(username)
+        else
+          message("Incorrect Username or Password!", "error") 
+        end
+      rescue Exception => e
+        system("echo 'Error = #{e}' >> /root/rdmlog")
+        message("Something Went Wrong!", "error") 
       end
     end
 
@@ -51,6 +62,10 @@ module RDM::Panel
     @webkit.main_frame.add_js_api('reboot') do
       RDM.reboot
     end
+  end
+
+  def self.message(message, type)
+    @webkit.main_frame.exec_js("message('#{message}','#{type}')")
   end
 
   def self.clean

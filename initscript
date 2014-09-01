@@ -14,14 +14,20 @@
 # Author: Sam Betts <sam@code-smash.net>
 #
 
+DEFAULT_DISPLAY_MANAGER_FILE=/etc/X11/default-display-manager
+
 touch /var/lock/rdm
 
 case "$1" in
   start)
-    echo "Starting RDM"
-    /usr/local/bin/rdm & 
-    rdm=$!
-    echo $rdm > /var/lock/rdm
+    if [ "$(cat $DEFAULT_DISPLAY_MANAGER_FILE)" != "/usr/local/bin/rdm" ]; then
+        echo "RDM not default display manager!" 
+    else
+        echo "Starting RDM"
+	/usr/local/bin/rdm & 
+	rdm=$!
+	echo $rdm > /var/lock/rdm
+    fi
     ;;
   stop)
     echo "Stopping RDM"

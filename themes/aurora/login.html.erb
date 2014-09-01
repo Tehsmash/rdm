@@ -6,6 +6,7 @@
   <div id="main"> 
     <div id="cell">
       <div id="content">
+        <p id="message"></p> 
         <label>Username:</label><input id="username" type="text" name="username"><br>
         <label>Password:</label><input id="password" type="password" name="password"><br>
         <label>Pick a session:</label>
@@ -38,6 +39,16 @@
     function clean() {
       document.getElementById("username").value = ""
       document.getElementById("password").value = ""
+      document.getElementById("message").innerHTML = ""
+    }
+
+    function session() {
+      sessions = document.getElementById("sessions")
+      return sessions.options[sessions.selectedIndex].value;
+    }
+
+    function message(msg, type) {
+      document.getElementById("message").innerHTML = msg; 
     }
   </script>
 </body>
