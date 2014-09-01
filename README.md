@@ -46,6 +46,12 @@ clean() - called to empty/reset the panel
 
 Other than those functions anything you can do in webkit, you can do to theme RDM :D 
 
+The main page must be called login.html.erb 
+
+In order to use a different theme, change the themepath variable in /etc/rdm/rdm.conf to
+point at the theme directory.
+
+
 Default Theme
 =============
 
