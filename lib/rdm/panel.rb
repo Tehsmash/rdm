@@ -27,6 +27,7 @@ module RDM::Panel
       @window = Gtk::Window.new
       @window.title = 'RDM'
       @window.set_default_size(@window.screen.width, @window.screen.height)
+      @window.signal_connect('destroy') { Gtk.main_quit }
       @window.set_window_position Gtk::Window::POS_CENTER
 
       addJSHooks
@@ -74,6 +75,11 @@ module RDM::Panel
 
   def self.hide
     @window.hide_all
+    iterate
+  end
+
+  def self.destroy
+    @window.destroy
     iterate
   end
 

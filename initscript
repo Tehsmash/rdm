@@ -31,7 +31,7 @@ case "$1" in
     ;;
   stop)
     echo "Stopping RDM"
-    kill -9 `cat /var/lock/rdm`
+    /usr/local/bin/rdm --close
     ;;
   *)
     echo "Usage: /etc/init.d/rdm {start|stop}"

@@ -1,4 +1,5 @@
 require 'etc'
+require 'socket'
 require 'shadow'
 require 'erb'
 
@@ -75,6 +76,52 @@ module RDM
 
   def self.shutdown
     system(RDM::Config.get("haltcmd"))
+  end
+
+  def self.stop
+    puts "Attempting Stop!"
+    RDM::Panel.destroy
+  end
+
+  def self.start
+    thread = Thread.new {
+      socket_start
+    }
+    RDM::Panel.new
+    RDM::Panel.run
+    puts "Panel Ended!"
+    thread.join
+  end
+
+  def self.socket_start
+    server = TCPServer.new 20401
+    loop do
+      client = server.accept
+      cmd = client.recvmsg[0]
+      case cmd
+      when "close"
+        stop
+        exit
+      when "shutdown"
+        stop
+        shutdown
+        exit
+      when "reboot"
+        stop
+        reboot
+        exit
+      else
+        puts "Nope..." 
+      end
+      client.close
+    end
+  end
+
+  def self.socket_send(msg)
+    server = TCPSocket.open 'localhost', 20401
+    puts "Sending #{msg}"
+    server.puts msg
+    server.close
   end
 end
 

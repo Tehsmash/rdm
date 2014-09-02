@@ -2,11 +2,20 @@
 
 require 'rdm'
 
-is_test = ARGV.shift
+parameter = ARGV.shift
 
-if is_test == "--test"
+run = false
+
+if parameter == "--test"
   require 'gtk2'
   require 'webkit'
+  run = true
+elsif parameter == "--shutdown"
+  RDM.socket_send("shutdown")
+elsif parameter == "--reboot"
+  RDM.socket_send("reboot")
+elsif parameter == "--close"
+  RDM.socket_send("close")
 elsif not is_test.nil?
   puts "Usage rdm {--test}"
   exit
@@ -14,8 +23,9 @@ else
   ENV['XAUTHORITY'] = RDM::XServer.createAuth 
   ENV['DISPLAY'] = RDM::XServer.display
   RDM::XServer.start
+  run = true
 end
 
-RDM::Panel.new
-
-RDM::Panel.run
+if run
+  RDM.start
+end
