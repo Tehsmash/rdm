@@ -56,7 +56,8 @@ module RDM
       end
 
       session = RDM::Config.sessionExec(RDM::Panel.session)
-      exec("/bin/bash", "-c", "exec /bin/bash -login /etc/X11/Xsession #{session}")
+      logincmd = RDM::Config.get("logincmd") % { session: session }
+      exec("/bin/bash", "-c", logincmd)
     end
 
     RDM::Panel.hide
@@ -69,11 +70,11 @@ module RDM
   end
 
   def self.reboot
-    system("reboot")
+    system(RDM::Config.get("rebootcmd"))
   end
 
   def self.shutdown
-    system("shutdown -h now")
+    system(RDM::Config.get("haltcmd"))
   end
 end
 

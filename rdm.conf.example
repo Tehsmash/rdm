@@ -1,2 +1,3 @@
 themepath: /home/sam/rdm/themes/aurora
 defaultpath: /bin:/usr/bin:/usr/local/bin
+logincmd: exec /bin/bash -login /etc/X11/Xsession %{session}

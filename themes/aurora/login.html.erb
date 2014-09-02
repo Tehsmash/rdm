@@ -7,29 +7,31 @@
     <div id="cell">
       <div id="content">
         <p id="message"></p> 
-        <label>Username:</label><input id="username" type="text" name="username"><br>
-        <label>Password:</label><input id="password" type="password" name="password"><br>
-        <label>Pick a session:</label>
-        <select id="sessions">
-          <% sessions.each do |session| %>
-            <option value="<%= session %>"><%= session %></option>
-          <% end %>
-        </select>
-
-        <br/><br/>
-
-        <input type="button" onclick="doLogin()" value="Login">
-        
+        <form id="loginform" target="#">
+          <label>Username:</label><input id="username" type="text" name="username"><br>
+          <label>Password:</label><input id="password" type="password" name="password"><br>
+          <label>Pick a session:</label><select id="sessions">
+            <% sessions.each do |session| %>
+              <option value="<%= session %>"><%= session %></option>
+            <% end %>
+          </select><br/><br/>
+          <input type="submit" value="Login">
+        </form> 
       </div>
     </div>
   </div>
 
   <div id="powerControls">
-    <button id="power" onclick="shutdown()">Shutdown</button>
-    <button id="rs" onclick="reboot()">Restart</button> 
+    <button id="power" onclick="shutdown()">Shutdown</button><button id="rs" onclick="reboot()">Restart</button> 
   </div>
 
   <script>
+    form = document.getElementById("loginform")
+    form.addEventListener("submit", function(ev) {
+      ev.preventDefault();
+      doLogin();
+    }, false)
+
     function doLogin() {
       username = document.getElementById("username").value
       password = document.getElementById("password").value
