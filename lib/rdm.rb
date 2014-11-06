@@ -80,6 +80,7 @@ module RDM
 
   def self.stop
     puts "Attempting Stop!"
+    system("rm rdmControlPipe")
     RDM::Panel.destroy
   end
 
@@ -94,10 +95,10 @@ module RDM
   end
 
   def self.socket_start
-    server = TCPServer.new 20401
+    system("mkfifo rdmControlPipe")
+    input = open("rdmControlPipe", "r+")
     loop do
-      client = server.accept
-      cmd = client.recvmsg[0]
+      cmd = input.gets
       case cmd
       when "close"
         stop
@@ -113,15 +114,13 @@ module RDM
       else
         puts "Nope..." 
       end
-      client.close
     end
   end
 
   def self.socket_send(msg)
-    server = TCPSocket.open 'localhost', 20401
-    puts "Sending #{msg}"
-    server.puts msg
-    server.close
+    output = open("rdmControlPipe", "w+")
+    output.puts msg
+    output.flush
   end
 end
 
