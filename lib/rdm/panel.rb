@@ -3,6 +3,9 @@ module RDM::Panel
     def self.sessions
       RDM::Config.getSessionList
     end
+    def self.users
+      RDM::Config.getUserList
+    end
   end
 
   def self.session

@@ -16,9 +16,6 @@ elsif parameter == "--reboot"
   RDM.socket_send("reboot")
 elsif parameter == "--close"
   RDM.socket_send("close")
-elsif not is_test.nil?
-  puts "Usage rdm {--test}"
-  exit
 else
   ENV['XAUTHORITY'] = RDM::XServer.createAuth 
   ENV['DISPLAY'] = RDM::XServer.display

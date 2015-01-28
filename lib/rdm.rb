@@ -25,6 +25,16 @@ module RDM
       Process::UID.change_privilege(pwnam.uid)
   end
 
+  def self.users
+    users = []
+    user = Etc.getpwent()
+    while not user.nil?
+      users << user.name
+      user = Etc.getpwent()
+    end
+    puts users
+  end
+
   def self.login(username)
     pwnam = Etc.getpwnam(username) 
     Etc.endpwent()
@@ -99,6 +109,8 @@ module RDM
     input = open("rdmControlPipe", "r+")
     loop do
       cmd = input.gets
+      cmd = cmd.chomp
+      puts "I received: #{cmd}"
       case cmd
       when "close"
         stop
