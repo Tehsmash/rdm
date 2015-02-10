@@ -39,8 +39,9 @@
     }, false)
 
     function doLogin() {
-      username = document.getElementById("username").value
-      password = document.getElementById("password").value
+      usernameField = document.getElementById("username");
+      username = usernameField.options[usernameField.selectedIndex].value;
+      password = document.getElementById("password").value;
       login(username, password)
     }
 
