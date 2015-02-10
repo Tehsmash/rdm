@@ -95,7 +95,7 @@ module RDM
 
   def self.stop
     puts "Attempting Stop!"
-    system("rm rdmControlPipe")
+    system("rm /var/run/rdm.sock")
     RDM::Panel.destroy
   end
 
@@ -110,8 +110,8 @@ module RDM
   end
 
   def self.socket_start
-    system("mkfifo rdmControlPipe")
-    input = open("rdmControlPipe", "r+")
+    system("mkfifo /var/run/rdm.sock")
+    input = open("/var/run/rdm.sock", "r+")
     loop do
       cmd = input.gets
       cmd = cmd.chomp
@@ -135,7 +135,7 @@ module RDM
   end
 
   def self.socket_send(msg)
-    output = open("rdmControlPipe", "w+")
+    output = open("/var/run/rdm.sock", "w+")
     output.puts msg
     output.flush
   end

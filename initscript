@@ -26,12 +26,20 @@ case "$1" in
         echo "Starting RDM"
 	/usr/local/bin/rdm & 
 	rdm=$!
-	echo $rdm > /var/lock/rdm
+	echo $rdm > /var/run/rdm.pid
     fi
     ;;
   stop)
-    echo "Stopping RDM"
+    echo "Stopping RDM..."
     /usr/local/bin/rdm --close
+    sleep 1
+    if ps ax | grep `cat /var/lock/rdm` | grep -v grep > /dev/null
+    then
+      echo "Stopping RDM Failed..."
+    else
+      echo "RDM Killed!"
+      rm /var/run/rdm.pid
+    fi
     ;;
   *)
     echo "Usage: /etc/init.d/rdm {start|stop}"
