@@ -4,7 +4,7 @@ module RDM::Panel
       RDM::Config.getSessionList
     end
     def self.users
-      RDM::Config.getUserList
+      RDM.users
     end
   end
 

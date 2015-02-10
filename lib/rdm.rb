@@ -29,10 +29,15 @@ module RDM
     users = []
     user = Etc.getpwent()
     while not user.nil?
-      users << user.name
+      if user.passwd == "x"
+        sp = Shadow::Passwd.getspnam(user.name)
+        unless ["!", "*"].include?(sp.sp_pwdp)
+          users << user.name
+        end
+      end
       user = Etc.getpwent()
     end
-    puts users
+    return users
   end
 
   def self.login(username)
